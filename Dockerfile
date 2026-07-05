@@ -17,4 +17,4 @@ pid_filename /tmp/squid.pid
 EOF
 
 USER proxy
-CMD ["/opt/squid/sbin/squid", "--foreground", "-YC"]
+CMD ["/opt/squid/sbin/squid", "-N", "-Y", "-C"]
