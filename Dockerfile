@@ -8,6 +8,7 @@ COPY --from=build /opt/squid /opt/squid
 RUN apt-get update && \
     apt-get -y --no-install-recommends install git ca-certificates curl && \
     apt-get -y install $(apt-cache depends -q -i squid | awk '$1 ~ /^Depends:/{print $2}' | grep -v squid) && \
+    rm -rf /var/lib/apt/lists/* && \
     cat <<EOF >>/opt/squid/etc/squid.conf
 logfile_rotate 0
 cache_log stdio:/dev/tty
