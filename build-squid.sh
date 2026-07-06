@@ -2,7 +2,7 @@
 export DEBIAN_FRONTEND=noninteractive
 sed -e "s/Types: deb/Types: deb deb-src/" -i /etc/apt/sources.list.d/debian.sources && \
 apt-get update && \
-apt-get -y --no-install-recommends install ca-certificates wget dirmngr libtool-bin && \
+apt-get -y --no-install-recommends install ca-certificates wget libtool-bin && \
 apt-get -y build-dep squid-openssl
 
 export CXXFLAGS="-O2 -s -march=x86-64-v3 -mtune=generic -pipe -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -Wno-error=deprecated-declarations"

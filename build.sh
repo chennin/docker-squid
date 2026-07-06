@@ -8,7 +8,7 @@ export BUILDAH_ISOLATION=chroot
 # Tag name: SQUID_7_6
 # squid -v: 7.6-VCS / 7.6
 cd $(dirname "$0")
-sudo apt-get update && sudo apt-get -y --no-install-recommends install git ca-certificates curl buildah netavark jq && \
+sudo apt-get update && sudo apt-get -y --no-install-recommends install ca-certificates curl buildah netavark jq && \
 VERS=$(curl -sLfm5 https://api.github.com/repos/squid-cache/squid/releases/latest | jq -r .tag_name) && \
 buildah --storage-driver "$STORAGE_DRIVER" --isolation "$BUILDAH_ISOLATION" bud -t "$CONT_LATEST" --pull=missing \
         --label VERSION_SQUID="$VERS" \
