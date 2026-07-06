@@ -5,7 +5,8 @@ apt-get update && \
 apt-get -y --no-install-recommends install ca-certificates wget dirmngr libtool-bin && \
 apt-get -y build-dep squid-openssl
 
-export CXXFLAGS="-O2 -march=x86-64-v3 -mtune=generic -pipe -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -Wno-error=deprecated-declarations"
+export CXXFLAGS="-O2 -s -march=x86-64-v3 -mtune=generic -pipe -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -Wno-error=deprecated-declarations"
+export CFLAGS="$CXXFLAGS"
 export CPPFLAGS="-Wdate-time -D_FORTIFY_SOURCE=3"
 export LDFLAGS="-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl,-z,relro -Wl,-z,now"
 
