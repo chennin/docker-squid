@@ -7,8 +7,9 @@ FROM debian:trixie-slim
 COPY --from=build /opt/squid /opt/squid
 RUN apt-get update && \
     apt-get -y --no-install-recommends install git ca-certificates curl && \
-    apt-get -y install $(apt-cache depends -q -i squid | awk '$1 ~ /^Depends:/{print $2}' | grep -v squid) && \
+    apt-get -y --no-install-recommends install $(apt-cache depends -q -i squid | awk '$1 ~ /^Depends:/{print $2}' | grep -vE "logrotate|squid") && \
     rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/log/dpkg.log /var/cache/ldconfig/aux-cache /var/log/apt /var/log/alternatives.log && \
     cat <<EOF >>/opt/squid/etc/squid.conf
 logfile_rotate 0
 cache_log stdio:/dev/tty
