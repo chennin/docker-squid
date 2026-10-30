@@ -1,5 +1,5 @@
 FROM debian:trixie-slim AS build
-ENV VER_TAG=SQUID_7_7
+ENV VER_TAG=SQUID_7_8
 COPY build-squid.sh .
 RUN ./build-squid.sh
 
