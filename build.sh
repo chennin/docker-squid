@@ -1,10 +1,10 @@
 #!/bin/bash
-export CONT_LATEST="${REGISTRY}/${IMAGE}"
+export CONT_LATEST="${REGISTRY}/${FORGEJO_REPOSITORY}"
 export DEBIAN_FRONTEND=noninteractive
 export STORAGE_DRIVER=vfs
 export BUILDAH_ISOLATION=chroot
 
-echo Image name: "${REGISTRY}/${IMAGE}"
+echo Image name: "${REGISTRY}/${FORGEJO_REPOSITORY}"
 env
 # Release name: v7.6
 # Tag name: SQUID_7_6

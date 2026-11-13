@@ -18,7 +18,6 @@ jobs:
       - name: Build OCI image
         env:
           ACTOR: ${{ secrets.REGISTRY_USER }}
-          IMAGE: ${{ env.FORGEJO_REPOSITORY }}
           REGISTRY: ${{ env.REGISTRY }}
           REGISTRY_PACKAGE_RW: ${{ secrets.PACKAGE_RW }}
-        run: ./build.sh
+        run: bash ./build.sh
