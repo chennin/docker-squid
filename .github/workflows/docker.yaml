@@ -21,7 +21,7 @@ jobs:
           BUILDAH_ISOLATION: chroot
           DEBIAN_FRONTEND: noninteractive
         run: |
-          export CONT_LATEST="${{ env.REGISTRY }}/${{ env.FORGEJO_REPOSITORY }}"
+          export CONT_LATEST="${{ vars.REGISTRY }}/${{ env.FORGEJO_REPOSITORY }}"
           echo "Image name: ${CONT_LATEST}"
           # Release name: v7.6
           # Tag name: SQUID_7_6
@@ -36,7 +36,7 @@ jobs:
           CONT_VER="${APP_VER}" && \
           CONT_WITH_VER="${CONT_LATEST%%:*}:${CONT_VER//[+~]/_}" && \
           echo "Container version: ${CONT_WITH_VER}" && \
-          echo "${{ secrets.PACKAGE_RW }}" | buildah login --password-stdin -u "${{ secrets.REGISTRY_USER }}" "${{ env.REGISTRY }}" && \
+          echo "${{ secrets.PACKAGE_RW }}" | buildah login --password-stdin -u "${{ secrets.REGISTRY_USER }}" "${{ vars.REGISTRY }}" && \
           buildah --storage-driver "$STORAGE_DRIVER" tag "$CONT_LATEST" "$CONT_WITH_VER" && \
           buildah --storage-driver "$STORAGE_DRIVER" push "$CONT_WITH_VER" && \
           buildah --storage-driver "$STORAGE_DRIVER" push "${CONT_LATEST}" && \
