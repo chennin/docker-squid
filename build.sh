@@ -5,6 +5,7 @@ export STORAGE_DRIVER=vfs
 export BUILDAH_ISOLATION=chroot
 
 echo Image name: "${REGISTRY}/${IMAGE}"
+env
 # Release name: v7.6
 # Tag name: SQUID_7_6
 # squid -v: 7.6-VCS / 7.6

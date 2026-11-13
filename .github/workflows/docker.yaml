@@ -19,6 +19,6 @@ jobs:
         env:
           ACTOR: ${{ secrets.REGISTRY_USER }}
           IMAGE: ${{ env.FORGEJO_REPOSITORY }}
-          REGISTRY: ${{ secrets.REGISTRY }}
+          REGISTRY: ${{ env.REGISTRY }}
           REGISTRY_PACKAGE_RW: ${{ secrets.PACKAGE_RW }}
         run: ./build.sh
