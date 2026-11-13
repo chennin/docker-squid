@@ -2,7 +2,7 @@
 export DEBIAN_FRONTEND=noninteractive
 sed -e "s/Types: deb/Types: deb deb-src/" -i /etc/apt/sources.list.d/debian.sources && \
 apt-get update && \
-apt-get -y --no-install-recommends install ca-certificates wget libtool-bin && \
+apt-get -y --no-install-recommends install ca-certificates wget libtool-bin gpg dirmngr gpg-agent && \
 apt-get -y build-dep squid-openssl
 
 export CXXFLAGS="-O2 -s -march=x86-64-v3 -mtune=generic -pipe -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -Wno-error=deprecated-declarations"
@@ -13,6 +13,10 @@ export LDFLAGS="-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl,-z,rel
 # https://github.com/squid-cache/squid/releases/download/SQUID_7_6/squid-7.6.tar.xz
 pkgver=$(echo "${VER_TAG}" | sed -e 's/SQUID_//' -e 's/_/./')
 wget -q "https://github.com/squid-cache/squid/releases/download/${VER_TAG}/squid-$pkgver.tar.xz" && \
+wget -q "https://github.com/squid-cache/squid/releases/download/${VER_TAG}/squid-$pkgver.tar.xz.asc" && \
+wget -q "https://www.squid-cache.org/pgp.asc" && \
+gpg --import pgp.asc && \
+gpg --verify "squid-$pkgver.tar.xz.asc" "squid-$pkgver.tar.xz" && echo "✓ Verified" || exit 1
 mkdir squid && tar --strip-components=1 -C squid -xf "squid-$pkgver.tar.xz" && \
 cd squid && \
 ./configure \
@@ -47,5 +51,5 @@ cd squid && \
      --disable-arch-native \
      --disable-strict-error-checking \
      --enable-wccpv2
-make -j $(( $(nproc) / 2 + 1)) && \
+make -j"$(nproc)" && \
 make install
