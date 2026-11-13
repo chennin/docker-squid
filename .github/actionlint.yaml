@@ -1,6 +1,6 @@
 self-hosted-runner:
   labels:
-    - ubuntu-26.04
+    - debian-trixie
 paths:
   .{forgejo,github}/workflows/**/*.{yml,yaml}:
     ignore:

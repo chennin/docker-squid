@@ -1,12 +1,13 @@
+enable-email-notifications: true
 on:
   workflow_dispatch:
   push:
   schedule:
-    - cron: '37 03 * * 3'
+    - cron: '06 14 * * 1'
       timezone: "America/New_York"
 jobs:
   container:
-    runs-on: ubuntu-26.04
+    runs-on: debian-trixie
     permissions:
       contents: read
       packages: write
@@ -16,8 +17,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Build OCI image
         env:
-          ACTOR: ${{ github.actor }}
-          IMAGE: ${{ github.repository }}
-          REGISTRY: ghcr.io
-          REGISTRY_PACKAGE_RW: ${{ secrets.GITHUB_TOKEN }}
+          ACTOR: ${{ secrets.REGISTRY_USER }}
+          IMAGE: ${{ env.FORGEJO_REPOSITORY }}
+          REGISTRY: ${{ secrets.REGISTRY }}
+          REGISTRY_PACKAGE_RW: ${{ secrets.PACKAGE_RW }}
         run: ./build.sh
