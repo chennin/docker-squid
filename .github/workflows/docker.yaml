@@ -17,8 +17,27 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Build OCI image
         env:
-          ACTOR: "${{ secrets.REGISTRY_USER }}"
-          REGISTRY: "${{ env.REGISTRY }}"
-          REGISTRY_PACKAGE_RW: "${{ secrets.PACKAGE_RW }}"
-          FOO: "bar"
-        run: bash ./build.sh
+          STORAGE_DRIVER: vfs
+          BUILDAH_ISOLATION: chroot
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          export CONT_LATEST="${{ env.REGISTRY }}/${{ env.FORGEJO_REPOSITORY }}"
+          echo "Image name: ${CONT_LATEST}"
+          # Release name: v7.6
+          # Tag name: SQUID_7_6
+          # squid -v: 7.6-VCS / 7.6
+          apt-get update && apt-get -y --no-install-recommends install ca-certificates curl buildah netavark jq && \
+          VERS=$(curl -sLfm5 https://api.github.com/repos/squid-cache/squid/releases/latest | jq -r .tag_name) && \
+          buildah --storage-driver "$STORAGE_DRIVER" --isolation "$BUILDAH_ISOLATION" bud -t "$CONT_LATEST" --pull=missing \
+                  --label VERSION_SQUID="$VERS" \
+                  --build-arg VER_TAG="${VERS}" -f Dockerfile && \
+          buildah --storage-driver "$STORAGE_DRIVER" from --pull=never --name version-checker "$CONT_LATEST" && \
+          APP_VER=$(buildah --storage-driver "$STORAGE_DRIVER" --isolation "$BUILDAH_ISOLATION" run version-checker /opt/squid/sbin/squid -v | awk '$3 ~ /Version/{print $4}') && \
+          CONT_VER="${APP_VER}" && \
+          CONT_WITH_VER="${CONT_LATEST%%:*}:${CONT_VER//[+~]/_}" && \
+          echo "Container version: ${CONT_WITH_VER}" && \
+          echo "${{ secrets.PACKAGE_RW }}" | buildah login --password-stdin -u "${{ secrets.REGISTRY_USER }}" "${{ env.REGISTRY }}" && \
+          buildah --storage-driver "$STORAGE_DRIVER" tag "$CONT_LATEST" "$CONT_WITH_VER" && \
+          buildah --storage-driver "$STORAGE_DRIVER" push "$CONT_WITH_VER" && \
+          buildah --storage-driver "$STORAGE_DRIVER" push "${CONT_LATEST}" && \
+          buildah --storage-driver "$STORAGE_DRIVER" images
