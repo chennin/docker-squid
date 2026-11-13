@@ -11,9 +11,9 @@ export CPPFLAGS="-Wdate-time -D_FORTIFY_SOURCE=3"
 export LDFLAGS="-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl,-z,relro -Wl,-z,now"
 
 # https://github.com/squid-cache/squid/releases/download/SQUID_7_6/squid-7.6.tar.xz
-pkgver=$(echo ${VER_TAG} | sed -e 's/SQUID_//' -e 's/_/./')
-wget -q https://github.com/squid-cache/squid/releases/download/${VER_TAG}/squid-$pkgver.tar.xz && \
-mkdir squid && tar --strip-components=1 -C squid -xf squid-$pkgver.tar.xz && \
+pkgver=$(echo "${VER_TAG}" | sed -e 's/SQUID_//' -e 's/_/./')
+wget -q "https://github.com/squid-cache/squid/releases/download/${VER_TAG}/squid-$pkgver.tar.xz" && \
+mkdir squid && tar --strip-components=1 -C squid -xf "squid-$pkgver.tar.xz" && \
 cd squid && \
 ./configure \
      --prefix=/opt/squid \
